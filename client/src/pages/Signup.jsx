@@ -1,7 +1,8 @@
 import { useState } from "react";
 import api from "../api";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import image from "../assets/img.jpg"; // Adjust if needed
+
 function Signup() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -17,11 +18,10 @@ function Signup() {
   const handleSubmit = (e) => {
     e.preventDefault();
     api
-      .post("/auth/signup", form)
+      .post("/signup", form)
       .then((res) => {
         alert("Signup Successful");
         navigate("/login");
-        // localStorage.setItem("token", res.data.token);
       })
       .catch((err) => {
         alert(err.response?.data?.message || "Signup failed");
@@ -30,94 +30,173 @@ function Signup() {
 
   return (
     <>
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-            Sign up for an account
-          </h2>
-        </div>
-
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "98vh",
+          backgroundImage: `url(${image})`,
+          backgroundSize: "cover",
+          fontFamily: "Segoe UI, Tahoma, Geneva, Verdana, sans-serif",
+        }}
+      >
+        <div
+          style={{
+            background: "rgba(255, 255, 255, 0.2)",
+            backdropFilter: "blur(10px)",
+            WebkitBackdropFilter: "blur(10px)",
+            color: "#333",
+            textAlign: "center",
+            padding: "40px",
+            borderRadius: "12px",
+            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.2)",
+            width: "350px",
+            display: "flex",
+            flexDirection: "column",
+            border: "1px solid rgba(255, 255, 255, 0.3)",
+          }}
+        >
+          <h1
+            style={{
+              fontSize: "2.5em",
+              marginBottom: "30px",
+              color: "#2c3e50",
+            }}
+          >
+            Sign Up
+          </h1>
+          <form onSubmit={handleSubmit} style={{ padding: "0 20px" }}>
+            <div style={{ marginBottom: "20px" }}>
               <label
                 htmlFor="name"
-                className="block text-sm/6 font-medium text-gray-900"
+                style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontWeight: "bold",
+                  color: "#2c3e50",
+                  textAlign: "left",
+                }}
               >
                 Name
               </label>
-              <div className="mt-2">
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  required
-                  value={form.name}
-                  onChange={handleChange}
-                  autoComplete="name"
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                />
-              </div>
+              <input
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: "8px",
+                  border: "1px solid #ccc",
+                  color: "#333",
+                  backgroundColor: "#f9f9f9",
+                  fontSize: "1em",
+                  boxSizing: "border-box",
+                }}
+                type="text"
+                id="name"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                required
+              />
             </div>
 
-            <div>
+            <div style={{ marginBottom: "20px" }}>
               <label
                 htmlFor="email"
-                className="block text-sm/6 font-medium text-gray-900"
+                style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontWeight: "bold",
+                  color: "#2c3e50",
+                  textAlign: "left",
+                }}
               >
-                Email address
+                Email
               </label>
-              <div className="mt-2">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  value={form.email}
-                  onChange={handleChange}
-                  autoComplete="email"
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                />
-              </div>
+              <input
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: "8px",
+                  border: "1px solid #ccc",
+                  color: "#333",
+                  backgroundColor: "#f9f9f9",
+                  fontSize: "1em",
+                  boxSizing: "border-box",
+                }}
+                type="email"
+                id="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                required
+              />
             </div>
 
-            <div>
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="block text-sm/6 font-medium text-gray-900"
-                >
-                  Password
-                </label>
-              </div>
-              <div className="mt-2">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  required
-                  value={form.password}
-                  onChange={handleChange}
-                  autoComplete="current-password"
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                />
-              </div>
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            <div style={{ marginBottom: "30px" }}>
+              <label
+                htmlFor="password"
+                style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontWeight: "bold",
+                  color: "#2c3e50",
+                  textAlign: "left",
+                }}
               >
-                Sign up
-              </button>
+                Password
+              </label>
+              <input
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: "8px",
+                  border: "1px solid #ccc",
+                  color: "#333",
+                  backgroundColor: "#f9f9f9",
+                  fontSize: "1em",
+                  boxSizing: "border-box",
+                }}
+                type="password"
+                id="password"
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                required
+              />
             </div>
-            <div className="mt-4 text-center">
+
+            <button
+              type="submit"
+              style={{
+                backgroundColor: "#007bff",
+                color: "white",
+                padding: "12px 20px",
+                borderRadius: "8px",
+                border: "none",
+                cursor: "pointer",
+                fontSize: "1em",
+                transition: "background-color 0.3s ease",
+                width: "100%",
+              }}
+              onMouseOver={(e) => (e.target.style.backgroundColor = "#0056b3")}
+              onMouseOut={(e) => (e.target.style.backgroundColor = "#007bff")}
+            >
+              Sign Up
+            </button>
+            <div style={{ marginTop: "20px" }}>
               <Link
                 to="/login"
-                className="text-indigo-600 hover:text-indigo-500 font-medium"
+                style={{
+                  textDecoration: "none",
+                  color: "#007bff",
+                  fontWeight: "bold",
+                  transition: "color 0.3s ease",
+                }}
+                onMouseOver={(e) => (e.target.style.color = "#0056b3")}
+                onMouseOut={(e) => (e.target.style.color = "#007bff")}
               >
-                Already have an account? Login here
+                Already have an account? Login
               </Link>
             </div>
           </form>

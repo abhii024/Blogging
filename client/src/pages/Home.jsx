@@ -6,10 +6,23 @@ function Home() {
   const [form, setForm] = useState({ title: "", text: "" });
   const [editId, setEditId] = useState(null);
   const [userId, setUserId] = useState("");
+  const [showScroll, setShowScroll] = useState(false);
   // Fetch all blogs on component mount
   useEffect(() => {
     getUser();
     fetchBlogs();
+    // Listen for scroll event
+    window.onscroll = () => {
+      if (window.scrollY > 200) {
+        setShowScroll(true);
+      } else {
+        setShowScroll(false);
+      }
+    };
+
+    return () => {
+      window.onscroll = null; // Clean up scroll event listener
+    };
   }, []);
   const getUser = async () => {
     const res = await api.get("/profile");
@@ -47,6 +60,7 @@ function Home() {
   const handleEdit = (blog) => {
     setForm({ title: blog.title, text: blog.text });
     setEditId(blog._id);
+    scrollToTop();
   };
 
   const handleDelete = async (id) => {
@@ -60,72 +74,228 @@ function Home() {
     }
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.reload(); // or navigate to login page if routing
+  };
+
+  const formStyle = {
+    padding: "20px",
+    border: "1px solid #ddd",
+    borderRadius: "8px",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+    marginBottom: "20px",
+  };
+
+  const inputStyle = {
+    width: "100%",
+    padding: "10px",
+    marginBottom: "10px",
+    borderRadius: "5px",
+    border: "1px solid #ddd",
+  };
+
+  const buttonStyle = {
+    padding: "10px 15px",
+    backgroundColor: "#2ecc71",
+    color: "white",
+    borderRadius: "5px",
+    border: "none",
+    cursor: "pointer",
+  };
+  // const buttonStyle = {
+  // padding: '8px 15px',
+  // borderRadius: '5px',
+  // cursor: 'pointer',
+  // };
+
+  const containerStyle = {
+    maxWidth: "800px",
+    margin: "20px auto",
+    padding: "20px",
+  };
+
+  const headingStyle = {
+    fontSize: "2rem",
+    fontWeight: "bold",
+    marginBottom: "20px",
+  };
+
+  const postCardStyle = {
+    border: "1px solid #ddd",
+    padding: "15px",
+    marginBottom: "20px",
+    borderRadius: "8px",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+  };
+
+  const postTitleStyle = {
+    fontSize: "1.5rem",
+    fontWeight: "600",
+  };
+
+  const postTextStyle = {
+    fontSize: "1rem",
+    color: "whight",
+    marginTop: "10px",
+  };
+
+  const postAuthorStyle = {
+    fontSize: "0.9rem",
+    color: "#777",
+    marginTop: "10px",
+  };
+
+  const postActionsStyle = {
+    marginTop: "10px",
+    display: "flex",
+    gap: "10px",
+  };
+
+  const deleteButtonStyle = {
+    ...buttonStyle,
+    backgroundColor: "#e74c3c",
+    color: "white",
+  };
+
+  const editButtonStyle = {
+    ...buttonStyle,
+    backgroundColor: "#3498db",
+    color: "white",
+  };
+  const scrollToTopButtonStyle = {
+    position: "fixed",
+    bottom: "30px",
+    right: "30px",
+    backgroundColor: "#2ecc71",
+    color: "white",
+    borderRadius: "50%",
+    padding: "10px 15px",
+    fontSize: "18px",
+    cursor: "pointer",
+    display: showScroll ? "block" : "none", // Show only if scrolled down
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.3)",
+    border: "none",
+    zIndex: 1000,
+  };
+  const topBarStyle = {
+    position: "sticky",
+    top: 0,
+    backgroundColor: "#34495e",
+    color: "white",
+    padding: "10px 20px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    zIndex: 1000,
+  };
+
+  const logoutButtonStyle = {
+    backgroundColor: "#e74c3c",
+    border: "none",
+    color: "white",
+    padding: "8px 15px",
+    borderRadius: "5px",
+    cursor: "pointer",
+  };
+
   return (
-   <div className="max-w-2xl mx-auto mt-8 px-4">
-      <h2 className="text-2xl font-bold mb-4">
-        {editId ? "Edit Blog" : "Create Blog"}
-      </h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          name="title"
-          placeholder="Title"
-          value={form.title}
-          onChange={handleChange}
-          className="w-full px-3 py-2 border rounded"
-          required
-        />
-        <textarea
-          name="text"
-          placeholder="Blog content..."
-          value={form.text}
-          onChange={handleChange}
-          className="w-full px-3 py-2 border rounded"
-          required
-        ></textarea>
-        <button
-          type="submit"
-          className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500"
+    <>
+      <div>
+        <div style={topBarStyle}>
+          <h3 style={{ margin: 0 }}>📝 Blogging Platform</h3>
+          {/* {user && ( */}
+          <button style={logoutButtonStyle} onClick={handleLogout}>
+            Logout
+          </button>
+          {/* )} */}
+        </div>
+        <div
+          style={{
+            position: "sticky",
+            top: "60px", // just below the top bar
+            backgroundColor: "#f9f9f9",
+            // padding: "15px",
+            // border: "1px solid #ddd",
+            // borderRadius: "8px",
+            margin: "10px auto",
+            maxWidth: "800px",
+            zIndex: 500,
+
+            padding: "20px",
+            border: "1px solid #ddd",
+            borderRadius: "8px",
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+            marginBottom: "20px",
+          }}
         >
-          {editId ? "Update" : "Post"} Blog
-        </button>
-      </form>
+          <form onSubmit={handleSubmit}>
+            <h2 style={{ fontSize: "1.5rem", fontWeight: "600" }}>
+              Create Post
+            </h2>
+            <input
+              type="text"
+              name="title"
+              value={form.title}
+              onChange={handleChange}
+              placeholder="Title"
+              style={inputStyle}
+              required
+            />
+            <textarea
+              name="text"
+              value={form.text}
+              onChange={handleChange}
+              placeholder="Content"
+              style={inputStyle}
+              required
+            />
+            <button type="submit" style={buttonStyle}>
+              {editId ? "Update" : "Post"} Blog
+            </button>
+          </form>
+        </div>
 
-      <hr className="my-6" />
+        <div style={containerStyle}>
+          <h2 style={headingStyle}>All Blog Posts</h2>
+          {blogs.map((post) => (
+            <div key={post._id} style={postCardStyle}>
+              <h3 style={postTitleStyle}>{post.title}</h3>
+              <p style={postTextStyle}>{post.text}</p>
+              <p style={postAuthorStyle}>By: {post.author.name}</p>
 
-      <h3 className="text-xl font-semibold mb-2">All Blogs</h3>
-      {blogs.length === 0 ? (
-        <p>No blogs found.</p>
-      ) : (
-        blogs.map((blog) => (
-          <div key={blog._id} className="border p-4 mb-4 rounded shadow-sm">
-            <h4 className="text-lg font-bold">
-              {blog.title}- {blog.author.name}
-            </h4>
-            <p>{blog.text} </p>
-            {blog.author._id === userId && (
-              <div className="mt-2 space-x-2">
-                <button
-                  onClick={() => handleEdit(blog)}
-                  className="text-sm text-blue-600 hover:underline"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(blog._id)}
-                  className="text-sm text-red-600 hover:underline"
-                >
-                  Delete
-                </button>
-              </div>
-            )}
-            <hr className="my-6" />
-          </div>
-        ))
-      )}
-    </div>
-
-
-
+              {userId === post.author._id && (
+                <div style={postActionsStyle}>
+                  <button
+                    style={deleteButtonStyle}
+                    onClick={() => handleDelete(post._id)}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    style={editButtonStyle}
+                    onClick={() => handleEdit(post)}
+                  >
+                    Edit
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
+          {/* Go to top button */}
+          <button
+            style={scrollToTopButtonStyle}
+            onClick={scrollToTop}
+            aria-label="Go to top"
+          >
+            top
+          </button>
+        </div>
+      </div>
+    </>
   );
 }
 
